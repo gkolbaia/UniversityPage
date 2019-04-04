@@ -9,7 +9,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://192.168.4.169/gio-test-2', { useNewUrlParser: true });
+const db = require('./config/database')
+mongoose.connect(db.mongoURI, { useNewUrlParser: true });
 require('./models/student');
 require('./models/subject');
 require('./models/teacher');
@@ -17,6 +18,7 @@ const StudentModel = mongoose.model('students');
 const SubjectModel = mongoose.model('subject');
 const TeacherModel = mongoose.model('teacher');
 const ObjectId = mongoose.Types.ObjectId;
+const students  = require('./routes/students')
 
 function verifyToken(req, res, next) {
     if (!req.headers.authorization) {
@@ -346,6 +348,7 @@ app.get('/session/getSubjectsForLearningCard', function (req, res) {
         });
     });
 });
-app.listen(8000, () => {
-    console.log('serer is listenint on port', 8000)
+const port = process.env.PORT || 8000
+app.listen(port, () => {
+    console.log(`serer is listenint on port ${port}`);
 });
